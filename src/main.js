@@ -12,7 +12,6 @@ const plugins = {
     'hanime': HanimePlugin
 };
 
-let currentPlugin = 'animeflv'; // Default
 let searchMode = 'anime';       // 'anime' o 'hentai'
 let selectedAnime = null;
 let activeResults = [];
@@ -21,7 +20,6 @@ let hlsInstance = null;
 // Elementos del DOM
 const searchInput = document.getElementById('searchInput');
 const searchBtn = document.getElementById('searchBtn');
-const pluginSelect = document.getElementById('pluginSelect');
 const resultsContainer = document.getElementById('resultsContainer');
 const statusDiv = document.getElementById('status');
 
@@ -48,34 +46,6 @@ const mainTitle = document.getElementById('main-title');
 // CONFIGURACIÓN DE INTERFAZ Y EVENTOS
 // ==========================================
 
-function updatePluginOptions() {
-    // Limpiar selector
-    pluginSelect.innerHTML = '';
-    
-    // Filtrar plugins según el modo de búsqueda
-    Object.keys(plugins).forEach(key => {
-        const plugin = plugins[key];
-        if (searchMode === 'hentai' && key === 'hanime') {
-            addOption(key, plugin.name);
-            currentPlugin = key;
-        } else if (searchMode === 'anime' && key !== 'hanime') {
-            addOption(key, plugin.name);
-        }
-    });
-
-    if (searchMode === 'anime') {
-        currentPlugin = 'animeflv';
-        pluginSelect.value = 'animeflv';
-    }
-}
-
-function addOption(value, text) {
-    const opt = document.createElement('option');
-    opt.value = value;
-    opt.textContent = text;
-    pluginSelect.appendChild(opt);
-}
-
 // Botones de Modo
 modeAnimeBtn.addEventListener('click', () => {
     if (searchMode === 'anime') return;
@@ -85,7 +55,6 @@ modeAnimeBtn.addEventListener('click', () => {
     modeHentaiBtn.classList.remove('active');
     mainTitle.textContent = "AnimeDex";
     searchInput.placeholder = "Buscar anime...";
-    updatePluginOptions();
     resetUI();
 });
 
@@ -97,12 +66,7 @@ modeHentaiBtn.addEventListener('click', () => {
     modeAnimeBtn.classList.remove('active');
     mainTitle.textContent = "AnimeDex Adulto";
     searchInput.placeholder = "Buscar en Hanime...";
-    updatePluginOptions();
     resetUI();
-});
-
-pluginSelect.addEventListener('change', (e) => {
-    currentPlugin = e.target.value;
 });
 
 function setStatus(msg) {
@@ -242,13 +206,27 @@ async function fetchServers(epNumber) {
     serverGroups.innerHTML = '';
 
     try {
-        const plugin = plugins[currentPlugin];
         let servers = [];
 
-        if (currentPlugin === 'hanime') {
-            servers = await plugin.getServers(selectedAnime.title, 1, CapacitorHttp, selectedAnime.slug);
+        if (searchMode === 'hentai') {
+            servers = await plugins.hanime.getServers(selectedAnime.title, 1, CapacitorHttp, selectedAnime.slug);
         } else {
-            servers = await plugin.getServers(selectedAnime.title, epNumber, CapacitorHttp);
+            // Cargar en paralelo todos los proveedores disponibles para Anime
+            const flvPromise = plugins.animeflv.getServers(selectedAnime.title, epNumber, CapacitorHttp).catch(e => {
+                console.error("FLV Error:", e);
+                return [];
+            });
+            const jkPromise = plugins.jkanime.getServers(selectedAnime.title, epNumber, CapacitorHttp).catch(e => {
+                console.error("JK Error:", e);
+                return [];
+            });
+            const nyaaPromise = plugins.nyaa.getServers(selectedAnime.title, epNumber, CapacitorHttp).catch(e => {
+                console.error("Nyaa Error:", e);
+                return [];
+            });
+
+            const results = await Promise.all([flvPromise, jkPromise, nyaaPromise]);
+            servers = results.flat(); // Combinar todos los resultados en un array
         }
 
         if (servers.length === 0) {
@@ -513,6 +491,4 @@ closePlayerBtn.addEventListener('click', () => {
     if (extBar) extBar.remove();
 });
 
-// Inicialización de selectores
-updatePluginOptions();
 setStatus("Escribe tu búsqueda y presiona Buscar.");
