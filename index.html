@@ -7,7 +7,19 @@
     <!-- Google Fonts for premium feel -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/webtorrent@1.2.4/webtorrent.min.js"></script>
     <link rel="stylesheet" href="./src/style.css">
+    <script>
+        // Capturador de errores global para depuración en celular
+        window.addEventListener('error', function(e) {
+            setTimeout(function() {
+                const status = document.getElementById('status');
+                if (status) {
+                    status.innerHTML = `<span style="color: #ef4444; font-weight: bold; font-size: 11px;">⚠️ Error: ${e.message}<br>Archivo: ${e.filename.split('/').pop()}:${e.lineno}</span>`;
+                }
+            }, 100);
+        });
+    </script>
 </head>
 <body>
     <div id="app">

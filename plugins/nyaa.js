@@ -1,9 +1,9 @@
-import WebTorrent from 'webtorrent/dist/webtorrent.min.js';
-
 let client = null;
 function getTorrentClient() {
     if (!client) {
-        client = new WebTorrent();
+        const WT = window.WebTorrent || globalThis.WebTorrent;
+        if (!WT) throw new Error("WebTorrent CDN no cargó correctamente");
+        client = new WT();
     }
     return client;
 }
