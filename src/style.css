@@ -1,121 +1,431 @@
 :root {
-    --primary-color: #e50914;
-    --bg-color: #141414;
-    --text-color: #ffffff;
-    --card-bg: #2b2b2b;
+    --bg-dark: #09090e;
+    --card-bg: #12121f;
+    --accent-color: #6366f1;
+    --accent-hover: #4f46e5;
+    --accent-glow: rgba(99, 102, 241, 0.4);
+    --border-color: #1e1e30;
+    --text-primary: #f3f4f6;
+    --text-secondary: #9ca3af;
+}
+
+body.hentai-mode {
+    --accent-color: #ec4899;
+    --accent-hover: #db2777;
+    --accent-glow: rgba(236, 72, 153, 0.4);
+    --bg-dark: #0f050b;
+    --card-bg: #1a0b14;
+    --border-color: #2e1222;
 }
 
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
 }
 
 body {
-    font-family: 'Inter', sans-serif;
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    -webkit-font-smoothing: antialiased;
+    font-family: 'Outfit', sans-serif;
+    background-color: var(--bg-dark);
+    color: var(--text-primary);
+    overflow-x: hidden;
+    padding-bottom: 30px;
+    transition: background-color 0.4s ease;
 }
 
 header {
-    padding: 20px;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent);
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.85) 0%, rgba(9, 9, 14, 0) 100%);
+    padding: 16px;
     position: sticky;
     top: 0;
     z-index: 100;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.logo-icon {
+    font-size: 24px;
 }
 
 h1 {
     font-size: 24px;
-    margin-bottom: 15px;
-    color: var(--primary-color);
-    text-align: center;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    background: linear-gradient(90deg, #ffffff 0%, var(--accent-color) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
+/* Mode Switcher */
+.mode-selector {
+    display: flex;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 4px;
+    border-radius: 20px;
+    border: 1px solid var(--border-color);
+    margin: 0 auto 16px auto;
+    max-width: 280px;
+    transition: all 0.3s ease;
+}
+
+.mode-btn {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    padding: 8px 16px;
+    border-radius: 16px;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mode-btn.active {
+    background: var(--accent-color);
+    color: #ffffff;
+    box-shadow: 0 4px 12px var(--accent-glow);
+}
+
+/* Search Bar */
 .search-bar {
     display: flex;
-    gap: 10px;
-    margin-bottom: 15px;
+    gap: 8px;
+    max-width: 500px;
+    margin: 0 auto;
 }
 
-input, select {
+.search-bar input {
     flex: 1;
-    padding: 12px;
-    border-radius: 8px;
-    border: none;
-    background: rgba(255,255,255,0.1);
-    color: white;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-color);
+    padding: 12px 16px;
+    border-radius: 12px;
+    color: #ffffff;
+    font-size: 14px;
+    font-family: inherit;
     outline: none;
+    transition: all 0.3s ease;
 }
 
-button {
-    padding: 12px 20px;
-    border-radius: 8px;
+.search-bar input:focus {
+    border-color: var(--accent-color);
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 0 10px rgba(99, 102, 241, 0.15);
+}
+
+.search-bar button {
+    background: var(--accent-color);
     border: none;
-    background-color: var(--primary-color);
     color: white;
-    font-weight: bold;
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-family: inherit;
     cursor: pointer;
+    box-shadow: 0 4px 12px var(--accent-glow);
+    transition: all 0.2s ease;
 }
 
-#resultsContainer {
+.search-bar button:active {
+    transform: scale(0.96);
+}
+
+/* Status Msg */
+#status {
+    text-align: center;
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin: 10px 0;
+    min-height: 20px;
+}
+
+/* Main layouts */
+main {
+    padding: 0 16px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.grid-layout {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 15px;
-    padding: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 14px;
+    padding-top: 10px;
 }
 
+.flex-layout {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    padding: 15px 0;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Cards style */
 .anime-card {
-    background-color: var(--card-bg);
-    border-radius: 8px;
+    background: var(--card-bg);
+    border-radius: 14px;
     overflow: hidden;
+    border: 1px solid var(--border-color);
     cursor: pointer;
-    transition: transform 0.2s;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .anime-card:active {
-    transform: scale(0.95);
+    transform: scale(0.96);
+    border-color: var(--accent-color);
 }
 
 .anime-card img {
     width: 100%;
-    height: 220px;
+    height: 180px;
     object-fit: cover;
+    display: block;
+}
+
+.anime-card .card-info {
+    padding: 10px;
 }
 
 .anime-card h3 {
-    font-size: 14px;
-    padding: 10px;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.4;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
+.anime-card span {
+    font-size: 10px;
+    color: var(--text-secondary);
+    display: block;
+    margin-top: 4px;
+}
+
+/* Section Header */
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 12px;
+}
+
+.back-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    padding: 8px 16px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.back-btn:active {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.section-header h2 {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+/* Episode button */
+.ep-btn {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 13px;
+    min-width: 65px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.ep-btn:active, .ep-btn.active {
+    background: var(--accent-color);
+    border-color: var(--accent-color);
+    color: #ffffff;
+    box-shadow: 0 4px 10px var(--accent-glow);
+}
+
+/* Options Card */
+.options-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 14px;
+    margin-bottom: 16px;
+}
+
+.ads-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    cursor: pointer;
+}
+
+.ads-checkbox input {
+    accent-color: var(--accent-color);
+    width: 16px;
+    height: 16px;
+}
+
+/* Server Groups */
+.server-groups-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.server-group {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 14px;
+}
+
+.group-title {
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--accent-color);
+    margin-bottom: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding-bottom: 6px;
+}
+
+/* Server selection layout */
+.server-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+/* External App Player Card */
+.torrent-card {
+    background: var(--card-bg);
+    border: 2px solid var(--accent-color);
+    border-radius: 16px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 8px 24px var(--accent-glow);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.torrent-card h3 {
+    font-size: 16px;
+    color: var(--accent-color);
+}
+
+.torrent-card p {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+.external-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.ext-btn {
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    font-weight: 700;
+    color: white;
+    cursor: pointer;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.ext-btn.mpv { background-color: #0d9488; }
+.ext-btn.vlc { background-color: #ea580c; }
+.ext-btn.browser { background-color: #2563eb; }
+
+/* Video Player section */
 #playerContainer {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
-    background: black;
+    width: 100vw;
+    height: 100vh;
+    background: #000000;
     z-index: 1000;
     display: flex;
     flex-direction: column;
 }
 
-#playerContainer.hidden {
-    display: none;
+.player-header {
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px;
+    border-bottom: 1px solid #111;
 }
 
-#videoPlayer {
+.player-header button {
+    background: #ef4444;
+    border: none;
+    color: white;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+#playingTitle {
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     flex: 1;
-    width: 100%;
-    background: black;
 }
 
-#closePlayerBtn {
-    background: rgba(255,0,0,0.8);
-    border-radius: 0;
-    padding: 15px;
+#videoContainer {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #000;
+}
+
+#videoContainer video, #videoContainer iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
 }

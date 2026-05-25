@@ -4,32 +4,75 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>AnimeDex Mobile</title>
+    <!-- Google Fonts for premium feel -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <link rel="stylesheet" href="./src/style.css">
 </head>
 <body>
     <div id="app">
         <header>
-            <h1>AnimeDex</h1>
+            <div class="brand">
+                <span class="logo-icon">🎬</span>
+                <h1 id="main-title">AnimeDex</h1>
+            </div>
+            
+            <div class="mode-selector">
+                <button id="mode-anime" class="mode-btn active">📺 Anime</button>
+                <button id="mode-hentai" class="mode-btn">🔞 Adulto</button>
+            </div>
+
             <div class="search-bar">
                 <input type="text" id="searchInput" placeholder="Buscar anime...">
                 <button id="searchBtn">Buscar</button>
             </div>
-            <div class="plugin-selector">
-                <label for="pluginSelect">Fuente:</label>
-                <select id="pluginSelect">
-                    <!-- Los plugins se cargarán aquí -->
-                </select>
-            </div>
         </header>
 
-        <main id="resultsContainer">
-            <!-- Los resultados de la búsqueda aparecerán aquí -->
-        </main>
+        <div id="status">Escribe un anime y presiona Buscar.</div>
 
-        <div id="playerContainer" class="hidden">
-            <button id="closePlayerBtn">Cerrar Reproductor</button>
-            <video id="videoPlayer" controls></video>
-        </div>
+        <main>
+            <!-- 1. Contenedor de Resultados de Búsqueda -->
+            <section id="resultsContainer" class="grid-layout"></section>
+
+            <!-- 2. Contenedor de Episodios -->
+            <section id="episodesSection" class="hidden">
+                <div class="section-header">
+                    <button id="backToResultsBtn" class="back-btn">← Volver</button>
+                    <h2 id="animeDetailsTitle">Episodios</h2>
+                </div>
+                <div id="episodesContainer" class="flex-layout"></div >
+            </section>
+
+            <!-- 3. Panel de Opciones de Servidor / Reproducción -->
+            <section id="serverSection" class="hidden">
+                <div class="section-header">
+                    <button id="backToEpisodesBtn" class="back-btn">← Cambiar Ep</button>
+                    <h2>Selecciona Servidor</h2>
+                </div>
+                
+                <div class="options-card">
+                    <label class="ads-checkbox">
+                        <input type="checkbox" id="block-ads" checked>
+                        🛡️ Bloquear publicidad en iframes
+                    </label>
+                </div>
+
+                <div id="serverGroups" class="server-groups-container">
+                    <!-- Servidores agrupados por proveedor -->
+                </div>
+            </section>
+
+            <!-- 4. Contenedor del Reproductor -->
+            <section id="playerContainer" class="hidden">
+                <div class="player-header">
+                    <button id="closePlayerBtn">✕ Cerrar</button>
+                    <span id="playingTitle">Reproduciendo...</span>
+                </div>
+                <div id="videoContainer">
+                    <video id="videoPlayer" controls></video>
+                </div>
+            </section>
+        </main>
     </div>
 
     <script type="module" src="./src/main.js"></script>
